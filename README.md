@@ -219,30 +219,14 @@ These are realistic next steps that would strengthen the project:
 - [ ] **QoS (Quality of Service)** to prioritize emergency/CCTV traffic over student traffic
 - [ ] **Redundant uplinks** from floor switches to core switch for high availability
 
----
 
-## What I Learned
-
-- Designing and implementing a segmented enterprise-style LAN from scratch
-- VLAN theory vs. practical CLI configuration on Cisco IOS
-- How Router-on-a-Stick works and why it matters for inter-VLAN communication
-- Real-world NAT/PAT — how multiple private IPs share a single public IP
-- Writing and applying Extended ACLs for traffic filtering
-- IoT device integration and browser-based automation in a network context
-- The importance of planning IP addressing schemes before touching any device
-
----
 
 ## Author
 
 **M. Mansoor Ur Rehman**  
-BSE233094 | Department of Software Engineering  
-Capital University of Science and Technology (CUST), Islamabad
 
-- 📧 [Your Email]
-- 💼 [LinkedIn Profile]
-- 🐙 [GitHub Profile]
+- 📧 mansoorshakeel196@gmail.com
+- 💼 https://www.linkedin.com/in/mmansoorurrehman/
 
 ---
 
-> *Project submitted for Computer Networks Lab — Instructor: Muhammad Awais*
