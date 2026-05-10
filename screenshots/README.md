@@ -2,7 +2,7 @@
 
 This folder contains screenshots exported from Cisco Packet Tracer.
 
-## Required Screenshots
+## Screenshots
 
 | Filename | description |
 |---|---|
