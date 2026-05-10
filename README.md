@@ -227,6 +227,7 @@ These are realistic next steps that would strengthen the project:
 
 - 📧 mansoorshakeel196@gmail.com
 - 💼 https://www.linkedin.com/in/mmansoorurrehman/
+- 🐙 https://github.com/imnxr
 
 ---
 
