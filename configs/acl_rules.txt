@@ -1,0 +1,90 @@
+# ============================================================
+# ACL Rules — Router0
+# Purpose: Control inter-VLAN traffic for security
+# Type: Extended Named ACLs (applied on subinterfaces inbound)
+# ============================================================
+
+
+# ============================================================
+# ACL 1: block-Students
+# Goal: Prevent Student VLAN (30) from reaching Admin VLAN (10)
+# Applied: inbound on fa0/0.30 (Student subinterface)
+#
+# Logic:
+#   - Deny any packet from 192.168.30.0/24 going to 192.168.10.0/24
+#   - Permit everything else (students can still reach internet, etc.)
+# ============================================================
+
+Router(config)#ip access-list extended block-Students
+Router(config-ext-nacl)#deny ip 192.168.30.0 0.0.0.255 192.168.10.0 0.0.0.255
+Router(config-ext-nacl)#permit ip any any
+Router(config-ext-nacl)#exit
+
+# Apply to student subinterface — inbound direction
+Router(config)#int fa0/0.30
+Router(config-subif)#ip access-group block-Students in
+Router(config-subif)#exit
+
+
+# ============================================================
+# ACL 2: server-only-Admin
+# Goal: Only Admin VLAN (10) devices can reach the server (192.168.10.2)
+#       Other VLANs (Security, Students, IoT) cannot access it directly
+# Applied: inbound on fa0/0.20, fa0/0.30, fa0/0.40
+#
+# Logic:
+#   - Permit packets from VLAN 10 (192.168.10.0/24) to server (192.168.10.2)
+#   - Deny everything else from reaching the server
+# ============================================================
+
+Router(config)#ip access-list extended server-only-Admin
+Router(config-ext-nacl)#permit ip 192.168.10.0 0.0.0.255 host 192.168.10.2
+Router(config-ext-nacl)#deny ip any host 192.168.10.2
+Router(config-ext-nacl)#exit
+
+# Apply to Security, Student, and IoT subinterfaces
+Router(config)#int fa0/0.20
+Router(config-subif)#ip access-group server-only-Admin in
+
+Router(config)#int fa0/0.30
+Router(config-subif)#ip access-group server-only-Admin in
+
+Router(config)#int fa0/0.40
+Router(config-subif)#ip access-group server-only-Admin in
+Router(config-subif)#exit
+
+
+# ============================================================
+# ACL 3: block-IoT
+# Goal: Prevent IoT devices from reaching any other VLAN
+#       IoT devices (192.168.40.x) should only communicate
+#       with the HostelGateway — not roam freely on the network
+# Applied: inbound on fa0/0.40
+#
+# Logic:
+#   - Deny IoT subnet from reaching the entire 192.168.0.0/16 range
+#   - Permit everything else (allows IoT to reach internet if needed)
+# ============================================================
+
+Router(config)#ip access-list extended block-IoT
+Router(config-ext-nacl)#deny ip 192.168.40.0 0.0.0.255 192.168.0.0 0.0.255.255
+Router(config-ext-nacl)#permit ip any any
+Router(config-ext-nacl)#exit
+
+# Apply to IoT subinterface — inbound direction
+Router(config)#int fa0/0.40
+Router(config-subif)#ip access-group block-IoT in
+Router(config-subif)#exit
+
+
+# ============================================================
+# TESTING — Expected outcomes
+#
+# Before ACLs:
+#   Student (192.168.30.x) CAN ping Admin server (192.168.10.2) ✓
+#
+# After ACLs:
+#   Student ping to Admin server → "Destination host unreachable" ✗
+#   Admin PC ping to internet    → success ✓
+#   IoT device ping to Students  → "Destination host unreachable" ✗
+# ============================================================

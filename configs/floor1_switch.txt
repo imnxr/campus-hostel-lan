@@ -1,0 +1,53 @@
+# ============================================================
+# 1st Floor Switch — IOS Configuration
+# Hostname: 1st-Floor-SW
+# Role: Connects 4 student room access points + IoT port
+#
+# Port Map:
+#   fa0/1       → Core Switch (trunk)
+#   fa0/2–fa0/5 → Room access points (VLAN 30 - Students)
+#   fa0/10      → IoT access point/device (VLAN 40 - IoT)
+# ============================================================
+
+Switch>en
+Switch#config t
+Switch(config)#hostname 1st-Floor-SW
+
+# --- VLAN Definitions ---
+1st-Floor-SW(config)#vlan 10
+1st-Floor-SW(config-vlan)#exit
+1st-Floor-SW(config)#vlan 20
+1st-Floor-SW(config-vlan)#exit
+1st-Floor-SW(config)#vlan 30
+1st-Floor-SW(config-vlan)#exit
+1st-Floor-SW(config)#vlan 40
+1st-Floor-SW(config-vlan)#exit
+1st-Floor-SW(config)#vlan 50
+1st-Floor-SW(config-vlan)#exit
+
+# --- Uplink to Core Switch (trunk) ---
+1st-Floor-SW(config)#int fa0/1
+1st-Floor-SW(config-if)#switchport mode trunk
+
+# --- Student VLAN 30 — Room 5, 6, 7, 8 access points ---
+1st-Floor-SW(config)#int fa0/2
+1st-Floor-SW(config-if)#switchport mode access
+1st-Floor-SW(config-if)#switchport access vlan 30
+
+1st-Floor-SW(config)#int fa0/3
+1st-Floor-SW(config-if)#switchport mode access
+1st-Floor-SW(config-if)#switchport access vlan 30
+
+1st-Floor-SW(config)#int fa0/4
+1st-Floor-SW(config-if)#switchport mode access
+1st-Floor-SW(config-if)#switchport access vlan 30
+
+1st-Floor-SW(config)#int fa0/5
+1st-Floor-SW(config-if)#switchport mode access
+1st-Floor-SW(config-if)#switchport access vlan 30
+
+# --- IoT VLAN 40 — CCTV camera and siren on 1st floor ---
+1st-Floor-SW(config)#int fa0/10
+1st-Floor-SW(config-if)#switchport mode access
+1st-Floor-SW(config-if)#switchport access vlan 40
+1st-Floor-SW(config-if)#exit

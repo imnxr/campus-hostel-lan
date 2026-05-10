@@ -1,0 +1,50 @@
+# ============================================================
+# DHCP Configuration — Server0 (192.168.10.2)
+# All pools configured on the centralized server in Admin VLAN
+# VLANs 30/40/50 use ip helper-address on the router to forward
+# DHCP requests from other VLANs to this server
+# ============================================================
+
+# Pool: Admin (VLAN 10)
+Pool Name:      Admin
+Default GW:     192.168.10.1
+DNS Server:     192.168.10.2
+Start IP:       192.168.10.100
+Subnet Mask:    255.255.255.0
+Max Users:      50
+
+# Pool: Security (VLAN 20)
+Pool Name:      Security
+Default GW:     192.168.20.1
+DNS Server:     192.168.10.2
+Start IP:       192.168.20.100
+Subnet Mask:    255.255.255.0
+Max Users:      50
+
+# Pool: Students (VLAN 30)
+Pool Name:      Students
+Default GW:     192.168.30.1
+DNS Server:     192.168.10.2
+Start IP:       192.168.30.100
+Subnet Mask:    255.255.255.0
+Max Users:      100
+
+# Pool: IoT (VLAN 40)
+Pool Name:      IoT
+Default GW:     192.168.40.1
+DNS Server:     192.168.10.2
+Start IP:       192.168.40.100
+Subnet Mask:    255.255.255.0
+Max Users:      50
+
+# Pool: Emergency (VLAN 50)
+Pool Name:      Emergency
+Default GW:     192.168.50.1
+DNS Server:     192.168.10.2
+Start IP:       192.168.50.100
+Subnet Mask:    255.255.255.0
+Max Users:      10
+
+# Note: HostelGateway (IoT controller) uses static IP 192.168.40.2
+#       Admin PC uses static IP 192.168.10.10
+#       Server0 itself uses static IP 192.168.10.2

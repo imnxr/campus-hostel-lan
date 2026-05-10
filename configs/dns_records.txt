@@ -1,0 +1,32 @@
+# ============================================================
+# DNS Configuration — Server0 (192.168.10.2)
+# Local A Records for hostel network devices
+# Allows devices to be reached by name instead of raw IP
+# ============================================================
+
+# Record 0
+Name:    admin-pc.local
+Type:    A Record
+Address: 192.168.10.10
+
+# Record 1
+Name:    emergency.local
+Type:    A Record
+Address: 192.168.50.10
+
+# Record 2
+Name:    lock1.local
+Type:    A Record
+Address: 192.168.40.2      ← points to HostelGateway which controls the smart lock
+
+# Record 3
+Name:    server.local
+Type:    A Record
+Address: 192.168.10.2      ← the DHCP/DNS server itself
+
+# ============================================================
+# DNS Test Commands:
+#   From Admin PC:   ping server.local    → should resolve to 192.168.10.2
+#   From Admin PC:   ping lock1.local     → should resolve to 192.168.40.2
+#   From Laptop6:    ping server.local    → fails (blocked by ACL / DNS not reachable from Students)
+# ============================================================

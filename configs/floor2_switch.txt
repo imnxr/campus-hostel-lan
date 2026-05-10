@@ -1,0 +1,46 @@
+# ============================================================
+# 2nd Floor Switch — IOS Configuration
+# Hostname: 2nd-Floor-Switch
+# Role: Connects 4 student room access points on 2nd floor
+#
+# Port Map:
+#   fa0/1       → Core Switch (trunk)
+#   fa0/2–fa0/5 → Room access points (VLAN 30 - Students)
+# ============================================================
+
+Switch>en
+Switch#config t
+Switch(config)#hostname 2nd-Floor-Switch
+
+# --- VLAN Definitions ---
+2nd-Floor-Switch(config)#vlan 10
+2nd-Floor-Switch(config-vlan)#exit
+2nd-Floor-Switch(config)#vlan 20
+2nd-Floor-Switch(config-vlan)#exit
+2nd-Floor-Switch(config)#vlan 30
+2nd-Floor-Switch(config-vlan)#exit
+2nd-Floor-Switch(config)#vlan 40
+2nd-Floor-Switch(config-vlan)#exit
+2nd-Floor-Switch(config)#vlan 50
+2nd-Floor-Switch(config-vlan)#exit
+
+# --- Uplink to Core Switch (trunk) ---
+2nd-Floor-Switch(config)#int fa0/1
+2nd-Floor-Switch(config-if)#switchport mode trunk
+
+# --- Student VLAN 30 — Room 9, 10, 11, 12 access points ---
+2nd-Floor-Switch(config)#int fa0/2
+2nd-Floor-Switch(config-if)#switchport mode access
+2nd-Floor-Switch(config-if)#switchport access vlan 30
+
+2nd-Floor-Switch(config)#int fa0/3
+2nd-Floor-Switch(config-if)#switchport mode access
+2nd-Floor-Switch(config-if)#switchport access vlan 30
+
+2nd-Floor-Switch(config)#int fa0/4
+2nd-Floor-Switch(config-if)#switchport mode access
+2nd-Floor-Switch(config-if)#switchport access vlan 30
+
+2nd-Floor-Switch(config)#int fa0/5
+2nd-Floor-Switch(config-if)#switchport mode access
+2nd-Floor-Switch(config-if)#switchport access vlan 30

@@ -1,0 +1,99 @@
+# ============================================================
+# Router0 — IOS Configuration
+# Hostname: Router0 (Cisco 2811)
+# Role: Core router — inter-VLAN routing, NAT, DHCP relay
+#
+# Interface summary:
+#   fa0/0 → Core Switch trunk (NAT inside)  — Router-on-a-Stick
+#   fa0/1 → Internet/Cloud-PT (NAT outside) — 203.0.113.1/24
+# ============================================================
+
+
+# ============================================================
+# SECTION 1 — Physical Interfaces
+# ============================================================
+
+Router>en
+Router#config t
+
+# Bring up fa0/0 (connects to core switch — no IP on physical, only subinterfaces)
+Router(config)#int fa0/0
+Router(config-if)#no shut
+
+# fa0/1 connects to internet — static public IP
+Router(config)#int fa0/1
+Router(config-if)#ip add 203.0.113.1 255.255.255.0
+Router(config-if)#no shut
+
+
+# ============================================================
+# SECTION 2 — Subinterfaces for Router-on-a-Stick (Inter-VLAN)
+# Each subinterface handles one VLAN using 802.1Q encapsulation
+# ============================================================
+
+# VLAN 10 — Admin
+Router(config)#int fa0/0.10
+Router(config-subif)#encapsulation dot1Q 10
+Router(config-subif)#ip add 192.168.10.1 255.255.255.0
+Router(config-subif)#exit
+
+# VLAN 20 — Security
+Router(config)#int fa0/0.20
+Router(config-subif)#encapsulation dot1Q 20
+Router(config-subif)#ip add 192.168.20.1 255.255.255.0
+Router(config-subif)#exit
+
+# VLAN 30 — Students
+Router(config)#int fa0/0.30
+Router(config-subif)#encapsulation dot1Q 30
+Router(config-subif)#ip add 192.168.30.1 255.255.255.0
+Router(config-subif)#exit
+
+# VLAN 40 — IoT
+Router(config)#int fa0/0.40
+Router(config-subif)#encapsulation dot1Q 40
+Router(config-subif)#ip add 192.168.40.1 255.255.255.0
+Router(config-subif)#exit
+
+# VLAN 50 — Emergency
+Router(config)#int fa0/0.50
+Router(config-subif)#encapsulation dot1Q 50
+Router(config-subif)#ip add 192.168.50.1 255.255.255.0
+Router(config-subif)#exit
+
+
+# ============================================================
+# SECTION 3 — DHCP Helper (ip helper-address)
+# Forwards DHCP broadcasts from VLANs 30/40/50 to Server0
+# VLANs 10 and 20 use static IPs — no helper needed
+# ============================================================
+
+Router(config)#int fa0/0.30
+Router(config-subif)#ip helper-address 192.168.10.2
+
+Router(config)#int fa0/0.40
+Router(config-subif)#ip helper-address 192.168.10.2
+
+Router(config)#int fa0/0.50
+Router(config-subif)#ip helper-address 192.168.10.2
+
+
+# ============================================================
+# SECTION 4 — NAT (PAT / NAT Overload)
+# All internal VLANs (192.168.x.x) share public IP 203.0.113.1
+# ============================================================
+
+# Mark inside and outside interfaces
+Router(config)#int fa0/0
+Router(config-if)#description inside vlan trunk
+Router(config-if)#ip nat inside
+
+Router(config)#int fa0/1
+Router(config-if)#description outside interface to internet
+Router(config-if)#ip nat outside
+
+# ACL 1 — defines which IPs are allowed to NAT (all private 192.168.x.x)
+Router(config)#access-list 1 permit 192.168.0.0 0.0.255.255
+
+# Enable PAT — translate using fa0/1's IP with overload
+Router(config)#ip nat inside source list 1 interface fa0/1 overload

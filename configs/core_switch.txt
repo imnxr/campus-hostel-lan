@@ -1,1 +1,35 @@
+# ============================================================
+# Core Switch — IOS Configuration
+# Hostname: Core-Switch
+# Role: Central switch connecting all floor switches to router
+# Trunk ports: fa0/1 (to Router), fa0/2 (Basement), fa0/3 (1F), fa0/4 (2F)
+# ============================================================
 
+Switch#config t
+Switch(config)#hostname Core-Switch
+
+# --- VLAN Definitions ---
+Core-Switch(config)#vlan 10
+Core-Switch(config-vlan)#name Admin
+Core-Switch(config-vlan)#vlan 20
+Core-Switch(config-vlan)#name Security
+Core-Switch(config-vlan)#vlan 30
+Core-Switch(config-vlan)#name Students
+Core-Switch(config-vlan)#vlan 40
+Core-Switch(config-vlan)#name IoT
+Core-Switch(config-vlan)#vlan 50
+Core-Switch(config-vlan)#name Emergency
+Core-Switch(config-vlan)#exit
+
+# --- Trunk Ports (carry all VLANs to router and floor switches) ---
+Core-Switch(config)#int fa0/1
+Core-Switch(config-if)#switchport mode trunk
+
+Core-Switch(config)#int fa0/2
+Core-Switch(config-if)#switchport mode trunk
+
+Core-Switch(config)#int fa0/3
+Core-Switch(config-if)#switchport mode trunk
+
+Core-Switch(config)#int fa0/4
+Core-Switch(config-if)#switchport mode trunk

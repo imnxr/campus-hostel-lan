@@ -1,0 +1,61 @@
+# ============================================================
+# Basement Switch — IOS Configuration
+# Hostname: Basement-Switch
+# Role: Connects Admin, Security, and Emergency devices in basement
+#
+# Port Map:
+#   fa0/1 → Core Switch (trunk)
+#   fa0/2 → Server0        (VLAN 10 - Admin)
+#   fa0/3 → Admin PC       (VLAN 10 - Admin)
+#   fa0/4 → TabletPC       (VLAN 10 - Admin)
+#   fa0/5 → Security PC 1  (VLAN 20 - Security)
+#   fa0/6 → Security PC 2  (VLAN 20 - Security)
+#   fa0/7 → Emergency Siren (VLAN 50 - Emergency)
+# ============================================================
+
+Switch>en
+Switch#config t
+Switch(config)#hostname Basement-Switch
+
+# --- VLAN Definitions (must exist on every switch) ---
+Basement-Switch(config)#vlan 10
+Basement-Switch(config-vlan)#exit
+Basement-Switch(config)#vlan 20
+Basement-Switch(config-vlan)#exit
+Basement-Switch(config)#vlan 30
+Basement-Switch(config-vlan)#exit
+Basement-Switch(config)#vlan 40
+Basement-Switch(config-vlan)#exit
+Basement-Switch(config)#vlan 50
+Basement-Switch(config-vlan)#exit
+
+# --- Uplink to Core Switch (trunk) ---
+Basement-Switch(config)#int fa0/1
+Basement-Switch(config-if)#switchport mode trunk
+
+# --- Admin VLAN 10 — Server0, Admin PC, TabletPC ---
+Basement-Switch(config)#int fa0/2
+Basement-Switch(config-if)#switchport mode access
+Basement-Switch(config-if)#switchport access vlan 10
+
+Basement-Switch(config)#int fa0/3
+Basement-Switch(config-if)#switchport mode access
+Basement-Switch(config-if)#switchport access vlan 10
+
+Basement-Switch(config)#int fa0/4
+Basement-Switch(config-if)#switchport mode access
+Basement-Switch(config-if)#switchport access vlan 10
+
+# --- Security VLAN 20 — CCTV monitoring PCs ---
+Basement-Switch(config)#int fa0/5
+Basement-Switch(config-if)#switchport mode access
+Basement-Switch(config-if)#switchport access vlan 20
+
+Basement-Switch(config)#int fa0/6
+Basement-Switch(config-if)#switchport mode access
+Basement-Switch(config-if)#switchport access vlan 20
+
+# --- Emergency VLAN 50 — Emergency siren/alarm ---
+Basement-Switch(config)#int fa0/7
+Basement-Switch(config-if)#switchport mode access
+Basement-Switch(config-if)#switchport access vlan 50
