@@ -1,4 +1,4 @@
-# Screenshots — Setup Guide
+# Screenshots
 
 This folder contains screenshots exported from Cisco Packet Tracer.
 
